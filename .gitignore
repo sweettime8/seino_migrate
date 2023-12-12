@@ -34,6 +34,7 @@ build/
 
 logs/**
 theme/**
+/output_source/**	
 /Frontend/node_modules
 /cty
 /venv
@@ -41,6 +42,6 @@ logfile.txt
 /build/**
 /dist/**
 /datatest/**
-/output_source/**	
 /_pycache_/**
+output_source.zip
 seinomigrate.spec
