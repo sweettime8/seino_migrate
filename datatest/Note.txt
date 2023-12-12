@@ -1,0 +1,19 @@
+Nội dung cần tool hóa, thứ tự ưu tiên từ trên xuống.
+I. Đầu vào:
+I-1. Guideline sửa source
+・Đây là file guideline cho member thực hiện update  bằng tay
+・[Seino] Phương pháp đóng gạch.xlsx
+I-2. Danh sách pattern
+・Tổng hợp các pattern convert source
+・pattern-summary.xlsx
+I-3. Design(ChangeList) Template
+・File đầu ra cho design, phần này cần tạo để gửi cho khách confirm
+・[Seino_AIX] Design(ChangeList) Template.xlsx
+I-4. origin Source
+・src-code-sample_rosenKoban.7z
+II. Đầu ra:
+II-1. File design
+・Đây là file member đã làm bằng tay
+・DesignSample_v1.0_VN
+II-2. Source đã được convert
+・Tạo thư mục source sau convert

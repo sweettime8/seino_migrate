@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>App Mysql to PostgreeSql</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded"/>
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <!-- vendor css -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filepond.css') }}">
+    <script src="{{ url_for('static', filename='js/filepond-plugin-file-validate-type.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filepond.js') }}"></script>
+
+
+</head>
+<body class="">
+<!-- [ Pre-loader ] start -->
+<div class="loader-bg">
+    <div class="loader-track">
+        <div class="loader-fill"></div>
+    </div>
+</div>
+<!-- [ Pre-loader ] End -->
+<!-- [ navigation menu ] start -->
+<nav class="pcoded-navbar  ">
+    <div class="navbar-wrapper  ">
+        <div class="navbar-content scroll-div ">
+
+            <div class="">
+                <div class="main-menu-header">
+                    <img class="img-radius" src="{{ url_for('static', filename='images/user/avatar-2.jpg') }}"
+                         alt="User-Profile-Image">
+
+                    <div class="user-details">
+                        <span>PID.SKU</span>
+                        <div id="more-details">coe - team</div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav pcoded-inner-navbar ">
+
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Options</label>
+                </li>
+                <li class="nav-item">
+                    <a href="/convert-project" class="nav-link "><span class="pcoded-micon"><i
+                            class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Project</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/convert-file" class="nav-link "><span class="pcoded-micon"><i
+                            class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Files</span></a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="/" class="nav-link "><span class="pcoded-micon"><i
+                            class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Code</span></a>
+                </li>
+
+            </ul>
+
+
+        </div>
+    </div>
+</nav>
+<!-- [ navigation menu ] end -->
+<!-- [ Header ] start -->
+
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+
+        {% block body %}
+
+        {% endblock %}
+
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+
+<!-- Required Js -->
+<script src="{{ url_for('static', filename='js/vendor-all.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pcoded.min.js') }}"></script>
+
+<!-- custom-chart js -->
+<script src="{{ url_for('static', filename='js/sweetalert2.min.js') }}"></script>
+
+<script>
+    data_multi_file = [];
+
+    let inputElement = document.getElementById('folderfilepond');
+    // Khởi tạo FilePond với các tùy chọn
+    FilePond.registerPlugin(FilePondPluginFileValidateType)
+
+    fileAccepted = [
+        '.java',
+        "text/xml", // Định dạng XML
+        "application/xml" // Định dạng XML
+    ]
+
+    let pond = FilePond.create(inputElement, {
+        allowMultiple: true, // Cho phép chọn nhiều tệp
+        allowReorder: true, // Cho phép sắp xếp lại thứ tự tệp đã chọn
+        maxFiles: 300, // Số lượng tệp tối đa cho phép
+        maxFileSize: '5MB', // Dung lượng tối đa cho mỗi tệp
+        maxTotalFileSize: '300MB', // Tổng dung lượng tối đa của tất cả tệp
+        maxFilepondSize: '3MB', // Dung lượng tối đa của mỗi tệp
+        acceptedFileTypes: fileAccepted,
+        labelFileTypeNotAllowed: 'Tệp không đúng định dạng',
+        server: {
+            process: (fieldName, file, metadata, load, error, progress, abort) => {
+                load();
+            }
+        },
+    });
+
+
+    function startConvert(urldata) {
+        console.log("## startConvert Files ##")
+        //clear trước khi check
+        data_multi_file.splice(0);
+        // Lấy tệp tin đã chọn trong FilePond
+        const files = pond.getFiles();
+        console.log(files);
+
+        // Kiểm tra xem có tệp nào được chọn không
+        if (files.length === 0) {
+            alert('Vui lòng chọn ít nhất một tệp.');
+            return;
+        }
+
+        document.getElementById('spinner1').style.display = 'inline-block';
+        // Tạo FormData để chứa các tệp tin được chọn
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append('filepond', files[i].file);
+            // lưu trữ ra biên global để dùng khi export
+            data_multi_file.push(files[i].file);
+        }
+
+        // Gửi yêu cầu tải lên tệp lên server bằng cách sử dụng Fetch API hoặc XMLHttpRequest
+        console.log(formData)
+        if (urldata === 'files') {
+            url = '/start-convert-files';
+        }
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý kết quả từ server (nếu cần)
+                console.log("mrd process data")
+                // Hiển thị thông báo với SweetAlert
+                Swal.fire({
+                    icon: data.status === 'success' ? 'success' : 'error', // Icon thông báo (success, error, warning, info)
+                    text: "Convert Success", // Nội dung thông báo
+                    timer: 4000, // Thời gian tự động tắt thông báo (5 giây)
+                    toast: true, // Thông báo kiểu toast (true) hoặc popup (false)
+                    position: 'top-end', // Vị trí hiển thị thông báo (top, top-start, top-end, center, center-start, center-end, bottom, bottom-start, bottom-end)
+                    showConfirmButton: false, // Ẩn nút xác nhận
+                })
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                console.error('Error:', error);
+            });
+
+        document.getElementById('spinner1').style.display = 'none';
+    }
+
+</script>
+
+
+</body>
+
+</html>

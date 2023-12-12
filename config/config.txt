@@ -1,0 +1,7 @@
+[config]
+http_port=8415
+http_server=localhost
+app_width=1500
+app_height=730
+pattern_path=D:\1.Learn\7.python\0.0.Project_fsoft\1.Seino\datatest\ToolInput\pattern-summary.xlsx
+project_path=D:\1.Learn\7.python\0.0.Project_fsoft\1.Seino\datatest\ToolInput\src-code-sample_rosenKoban

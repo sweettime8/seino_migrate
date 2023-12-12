@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block body %}
+    <!-- CSS của CodeMirror -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/codemirror.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/codemirrordracula.min.css') }}">
+    <!-- JavaScript của CodeMirror -->
+    <script src="{{ url_for('static', filename='js/codemirror.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/codemirror.sql.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/codemirror.plsql.min.js') }}"></script>
+
+    <!-- [ breadcrumb ] start -->
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">Seino Migration</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Convert Source Code</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form id="convert-form" action="{{ url_for('actions.convert_editor') }}" method="POST">
+        <div class="row custom-row">
+            <div class="col-md-6">
+                <label class="custom-row" for="code-language">INPUT</label>
+
+                <textarea id="code-editor-1" name="code-editor-1" class="form-control code-textarea"
+                          rows="40"></textarea>
+            </div>
+
+            <div class="col-md-6">
+                <label class="custom-row" for="code-language">OUTPUT </label>
+                <textarea id="code-editor-2" name="code-editor-2" class="form-control code-textarea"
+                          rows="40"></textarea>
+            </div>
+        </div>
+
+    </form>
+    <div class="row">
+        <div class="col-md-6 btn-container" style="margin-top: 5px">
+            <button class="btn btn-primary" onclick="convertCode()">Convert</button>
+        </div>
+    </div>
+
+    <!-- JavaScript để kích hoạt CodeMirror -->
+    <script>
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("code-editor-1"), {
+            lineNumbers: true, // Hiển thị số dòng
+            mode: "text/x-sql", // Ngôn ngữ lập trình (vd: Java, C#, Python)
+            theme: "dracula", // Chủ đề giao diện (vd: "default", "darcula", "3024-day", "3024-night",...)
+            indentUnit: 4, // Kích thước khoảng cách thụt vào (vd: 4 hoặc 2)
+        });
+
+        var editor2 = CodeMirror.fromTextArea(document.getElementById("code-editor-2"), {
+            lineNumbers: true, // Hiển thị số dòng
+            mode: "text/x-plsql", // Ngôn ngữ lập trình (vd: Java, C#, Python)
+            theme: "dracula", // Chủ đề giao diện (vd: "default", "darcula", "3024-day", "3024-night",...)
+            indentUnit: 4, // Kích thước khoảng cách thụt vào (vd: 4 hoặc 2)
+        });
+
+        async function convertCode() {
+            const formData = new FormData();
+            formData.append("code-editor-1", editor.getValue());
+            try {
+                const respone = await fetch('/convert-editor', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await respone.json()
+                editor2.setValue(data.to_code)
+            } catch (error) {
+                console.log('error', error)
+            }
+        }
+    </script>
+{% endblock %}
