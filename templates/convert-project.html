@@ -26,7 +26,7 @@
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                        <li class="breadcrumb-item"><a href="#!">Convert Project</a></li>
+                        <li class="breadcrumb-item"><a href="#!">Convert Folder</a></li>
                     </ul>
                 </div>
             </div>
@@ -45,14 +45,23 @@
                             <div class="col-md-12 col-sm-12">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="file" id="folderfilepond">
+                                        <div class="form-group col-md-12">
+                                            <label for="input-folder-path">Folder Path:</label>
+                                            <input type="text" value="{{project_path}}" class="form-control" id="input-folder-path">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="input-pattern-path">Pattern Path:</label>
+                                            <input type="text" value="{{pattern_path}}" class="form-control" id="input-pattern-path">
+                                        </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <button type="button" class="btn  btn-success" onclick="startConvert('files')">
-                                                <span id="spinner1" class="spinner-border spinner-border-sm"
-                                                      role="status"></span>
-                                            Convert
-                                        </button>
+                                        <div class="form-group col-md-12">
+                                            <button type="button" class="btn  btn-success" onclick="startConvertProject()">
+                                                    <span id="spinner-folder" class="spinner-border spinner-border-sm"
+                                                          role="status"></span>
+                                                Convert
+                                            </button>
+                                        </div>
 
                                     </div>
 

@@ -68,6 +68,14 @@
       console.log("mrd item.name", item.name)
       if(item.name.includes(".java")){
         type = ".java"
+      }else if(item.name.includes(".jsp")){
+        type = ".jsp"
+      }else if(item.name.includes(".html")){
+        type = ".html"
+      }else if(item.name.includes(".js")){
+        type = ".js"
+      }else if(item.name.includes(".xml")){
+        type = ".xml"
       }
 
       return type;

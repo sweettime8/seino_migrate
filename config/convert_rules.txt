@@ -1,4 +1,0 @@
-Set qHandle\(([^)]*)\)\s*\=\s*\"\"|||COMMON.C_LISTSET(qHandle, \1, NULL)
-Set qHandle\(([^)]*)\)\s*\=\s*([^\n]*)|||COMMON.C_LISTSET(qHandle, \1, \2)
-(Set\s*\$Zerror\s*\=\s*([^\n]*))|||-- \1
-(ducpro)|||$1

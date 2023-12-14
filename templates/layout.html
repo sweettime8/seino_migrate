@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>App Mysql to PostgreeSql</title>
+    <title>App Migrate Seino</title>
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -55,7 +55,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="/convert-project" class="nav-link "><span class="pcoded-micon"><i
-                            class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Project</span></a>
+                            class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Folder</span></a>
                 </li>
                 <li class="nav-item">
                     <a href="/convert-file" class="nav-link "><span class="pcoded-micon"><i
@@ -66,6 +66,11 @@
                 <li class="nav-item">
                     <a href="/" class="nav-link "><span class="pcoded-micon"><i
                             class="fa fa-random"></i></span><span class="pcoded-mtext">Convert Code</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/settings" class="nav-link "><span class="pcoded-micon"><i
+                            class="fa fa-random"></i></span><span class="pcoded-mtext">Settings</span></a>
                 </li>
 
             </ul>
@@ -111,6 +116,7 @@
 
     fileAccepted = [
         '.java',
+        '.jsp',
         "text/xml", // Định dạng XML
         "application/xml" // Định dạng XML
     ]
@@ -131,6 +137,57 @@
         },
     });
 
+    function startConvertProject() {
+        console.log("## startConvert Folder ##")
+        document.getElementById('spinner-folder').style.display = 'inline-block';
+        let folder_path = document.getElementById("input-folder-path").value
+        let pattern_path = document.getElementById("input-pattern-path").value
+        if (folder_path !== "") {
+            url = '/start-convert-folder';
+        } else {
+            console.log("## Folder path is null")
+        }
+
+        const formData = new FormData();
+        formData.append('folderPath', folder_path);
+        formData.append('patternPath', pattern_path);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý kết quả từ server (nếu cần)
+                console.log("mrd process data")
+                // Hiển thị thông báo với SweetAlert
+                Swal.fire({
+                    icon: data.status === 'success' ? 'success' : 'error', // Icon thông báo (success, error, warning, info)
+                    text: "Convert Success", // Nội dung thông báo
+                    timer: 4000, // Thời gian tự động tắt thông báo (5 giây)
+                    toast: true, // Thông báo kiểu toast (true) hoặc popup (false)
+                    position: 'top-end', // Vị trí hiển thị thông báo (top, top-start, top-end, center, center-start, center-end, bottom, bottom-start, bottom-end)
+                    showConfirmButton: false, // Ẩn nút xác nhận
+                })
+                document.getElementById('spinner-folder').style.display = 'none';
+            })
+            .catch(error => {
+                // Xử lý lỗi nếu có
+                 Swal.fire({
+                    icon: data.status === 'success' ? 'success' : 'error', // Icon thông báo (success, error, warning, info)
+                    text: "error", // Nội dung thông báo
+                    timer: 4000, // Thời gian tự động tắt thông báo (5 giây)
+                    toast: true, // Thông báo kiểu toast (true) hoặc popup (false)
+                    position: 'top-end', // Vị trí hiển thị thông báo (top, top-start, top-end, center, center-start, center-end, bottom, bottom-start, bottom-end)
+                    showConfirmButton: false, // Ẩn nút xác nhận
+                })
+                console.error('Error:', error);
+                document.getElementById('spinner-folder').style.display = 'none';
+            });
+
+
+
+    }
 
     function startConvert(urldata) {
         console.log("## startConvert Files ##")

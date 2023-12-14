@@ -7,7 +7,7 @@ app.register_blueprint(actions)
 
 if __name__ == '__main__':
     parser = configparser.ConfigParser()
-    parser.read("./config/config.txt")
+    parser.read("./config/config.txt", encoding="utf-8")
     http_port = parser.get("config", "http_port")
     http_server = parser.get("config", "http_server")
     app_width = parser.get("config", "app_width")
