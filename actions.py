@@ -32,7 +32,7 @@ def count_leading_spaces(line):
         if char == ' ':
             count += 1
         elif char == '\t':
-            count += 3
+            count += 4
         else:
             break  # Ngừng khi gặp ký tự không phải khoảng trắng
     return count
@@ -178,7 +178,7 @@ def read_conversion_rules_from_file_excel(file_path):
                 start_row = int(start[1:]) - 5
                 end_row = int(end[1:]) - 5
                 start_col = get_column_letter(sheet[start].column)
-                if(start_col == letter ):
+                if (start_col == letter):
                     value_merge = df.at[start_row, column]
                     for row in range(start_row, end_row + 1):
                         df.at[row, column] = value_merge
@@ -280,6 +280,7 @@ def convert_with_pattern_file_excel_by_lines(source_code, conversion_rules):
         output_code = []
         pattern_history = r'修正履歴：XXXX.XX.XX XXX-XXX Name'
         pattern_history2 = r'修正履歴：20XX.XX.XX'
+        pattern_history3 = r'修正履歴：200X.XX.XX XXX-XXX Name'
         for line in source_code:
             count_space = count_leading_spaces(line)
             for category, pattern, regex, replace, pic, filetype in conversion_rules:
@@ -317,26 +318,39 @@ def convert_with_pattern_file_excel_by_lines(source_code, conversion_rules):
                                 line = re.sub(regex,
                                               r'//(STR) ' + today + ' ' + content_comment + ' ' + pic + ' MOD ' + category + r'\n' + count_space * ' ' + '//' + line.strip() + r'\n' + count_space * ' ' + replace + r'\n' + count_space * ' ' + '//(END) ' + today + ' ' + content_comment + ' ' + pic + ' MOD ' + category,
                                               line)
-            if flag_check == 1:
-                match_pattern_his = re.findall(pattern_history, line)
-                match_pattern_his2 = re.findall(pattern_history2, line)
-                if (match_pattern_his2):
-                    line = re.sub(pattern_history,
-                                  r'修正履歴：' + today_his + ' ' + content_header + r'\n' + r' * 修正履歴：XXXX.XX.XX XXX-XXX Name',
-                                  line)
-                if (match_pattern_his):
-                    line = re.sub(pattern_history,
-                                  r'修正履歴：' + today_his + ' ' + content_header + r'\n' + r' * 修正履歴：XXXX.XX.XX XXX-XXX Name',
-                                  line)
             output_code.append(line)
 
+        # add history:
+        if flag_check == 1:
+            output_code_new = []
+            for line_2 in output_code:
+                match_pattern_his = re.findall(pattern_history, line_2)
+                match_pattern_his2 = re.findall(pattern_history2, line_2)
+                match_pattern_his3 = re.findall(pattern_history3, line_2)
+                if (match_pattern_his2):
+                    line_2 = re.sub(pattern_history2,
+                                    r'修正履歴：' + today_his + ' ' + content_header + r'\n' + r' * 修正履歴：20XX.XX.XX',
+                                    line_2)
+                elif (match_pattern_his):
+                    line_2 = re.sub(pattern_history,
+                                  r'修正履歴：' + today_his + ' ' + content_header + r'\n' + r' * 修正履歴：XXXX.XX.XX XXX-XXX Name',
+                                  line_2)
+                elif (match_pattern_his3):
+                    line_2 = re.sub(pattern_history3,
+                                    r'修正履歴：' + today_his + ' ' + content_header + r'\n' + r' * 修正履歴：200X.XX.XX XXX-XXX Name',
+                                    line_2)
+                output_code_new.append(line_2)
+
+            output_code = output_code_new
 
         result = ""
-        for line in output_code:
-            if line != output_code[-1]:
+        last_index = len(output_code) - 1
+        for index, line in enumerate(output_code):
+            if index != last_index:
                 result += line + "\n"
             else:
                 result += line
+
         return result
     except Exception as e:
         print('Error: ' + str(e))
