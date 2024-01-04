@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <style>
+        /* CSS cho button */
+        .center-align-button {
+            margin-top: 70px !important;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px; /* Khoảng cách giữa các paragraphs và button bên dưới */
+        }
+
+        .spinner-border {
+            display: none;
+        }
+
+
+    </style>
+    <!-- [ breadcrumb ] start -->
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">Seino Migrate</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Convert Folder</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pcoded-content">
+
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <form action="/open-config" method="POST" style="width: 100%">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-12">
+                                                <input disabled type="text" value="{{ config_path }}" class="form-control"
+                                                       id="input-folder-path">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-12">
+                                                <button type="submit" class="btn  btn-success">
+                                                        <span id="spinner-folder"
+                                                              class="spinner-border spinner-border-sm"
+                                                              role="status"></span>
+                                                    Open Config
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- [ tabs ] end -->
+
+        </div>
+
+        <!-- [ Main Content ] end -->
+    </div>
+
+{% endblock %}
